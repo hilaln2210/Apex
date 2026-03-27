@@ -94,6 +94,33 @@ function normMerged(ov,tech,perf,share){
   };
 }
 
+// Market indices via Finnhub quotes
+const MKT_SYMS=[
+  {sym:'SPY',  name:'S&P 500'},
+  {sym:'QQQ',  name:'NASDAQ'},
+  {sym:'VXX',  name:'VIX'},
+  {sym:'GLD',  name:'GOLD'},
+  {sym:'USO',  name:'OIL'},
+];
+app.get('/api/market',async(req,res)=>{
+  if(!FH)return res.json({ok:false,error:'No Finnhub token'});
+  try{
+    const d=await cache('market-idx',30000,async()=>{
+      const results=await Promise.all(MKT_SYMS.map(async m=>{
+        const q=await fetch(`https://finnhub.io/api/v1/quote?symbol=${m.sym}&token=${FH}`).then(r=>r.json()).catch(()=>({}));
+        const px=q.c||0, prev=q.pc||0, ch=prev?((px-prev)/prev*100):0;
+        return {name:m.name, sym:m.sym, px, ch:+ch.toFixed(2), pre:q.dp!=null?+(px*(1+q.dp/100)).toFixed(2):0, after:0, high:q.h||0, low:q.l||0, open:q.o||0};
+      }));
+      // BTC via Finnhub crypto (BINANCE:BTCUSDT)
+      const btc=await fetch(`https://finnhub.io/api/v1/quote?symbol=BINANCE:BTCUSDT&token=${FH}`).then(r=>r.json()).catch(()=>({}));
+      const btcPx=btc.c||0, btcPrev=btc.pc||0, btcCh=btcPrev?((btcPx-btcPrev)/btcPrev*100):0;
+      results.push({name:'BTC', sym:'BTC', px:Math.round(btcPx), ch:+btcCh.toFixed(2), pre:0, after:0, high:Math.round(btc.h||0), low:Math.round(btc.l||0), open:Math.round(btc.o||0)});
+      return results;
+    });
+    res.json({ok:true,data:d});
+  }catch(e){res.status(500).json({ok:false,error:e.message});}
+});
+
 app.get('/api/screener/:p',async(req,res)=>{
   const p=req.params.p;
   if(!FV)return res.status(401).json({ok:false,error:'No Finviz token'});

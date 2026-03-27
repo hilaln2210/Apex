@@ -1156,7 +1156,7 @@ async function refreshAll(){
   const btn=document.getElementById('rfbtn'); btn.classList.add('spinning');
   setSyncTxt('🔄 מסנכרן...');
   try{
-    await Promise.allSettled([fetchFinviz(),fetchExtBatch(),fetchNews()]);
+    await Promise.allSettled([fetchFinviz(),fetchExtBatch(),fetchNews(),fetchMarket()]);
     setSyncTxt(`✅ ${allStocks().length} מניות · ${newsData.length} חדשות`,new Date());
     setPills(); renderPicks(); renderScanner(); renderWatchlist();
     computeSignals(); renderSignals(); computeValueData(); renderValueTable();
@@ -1197,14 +1197,24 @@ function detectSession(){
 setInterval(detectSession,30000);
 
 /* ═══ MARKET ═══ */
+let marketData=D_MARKET;
+async function fetchMarket(){
+  if(IS_DEMO)return;
+  try{
+    const r=await fetch(`${PROXY}/api/market`).then(r=>r.json()).catch(()=>({ok:false}));
+    if(r.ok&&r.data?.length) marketData=r.data;
+  }catch(_){}
+  renderMarket();
+}
 function renderMarket(){
-  document.getElementById('mbar').innerHTML=D_MARKET.map(m=>{
+  document.getElementById('mbar').innerHTML=marketData.map(m=>{
     const up=m.ch>=0;
     return `<div class="mc ${up?'up':'dn'}">
       <div class="mc-name">${m.name}</div>
       <div class="mc-px">${m.px.toLocaleString()}</div>
       <div class="mc-ch ${up?'up':'dn'}">${up?'+':''}${m.ch}%</div>
-      <div class="mc-ext"><span class="ext-pre">PRE ${m.pre.toLocaleString()}</span><span class="ext-after">AH ${m.after.toLocaleString()}</span></div>
+      ${m.high?`<div class="mc-ext"><span class="ext-pre">H ${m.high.toLocaleString()}</span><span class="ext-after">L ${m.low.toLocaleString()}</span></div>`
+      :`<div class="mc-ext"><span class="ext-pre">PRE ${(m.pre||0).toLocaleString()}</span><span class="ext-after">AH ${(m.after||0).toLocaleString()}</span></div>`}
     </div>`;
   }).join('');
 }

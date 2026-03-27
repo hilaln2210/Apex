@@ -7,7 +7,7 @@ const arg=n=>process.env[n.toUpperCase()]||(process.argv.find(a=>a.startsWith(`-
 const FV=arg('finviz'),PO=arg('polygon'),FH=arg('finnhub');
 app.use(cors());app.use(express.json());app.use(express.static(__dirname));
 const CACHE=new Map();
-function cache(k,ttl,fn){const h=CACHE.get(k);if(h&&Date.now()-h.ts<ttl)return Promise.resolve(h.data);return fn().then(d=>{CACHE.set(k,{ts:Date.now(),data:d});return d;});}
+function cache(k,ttl,fn){const h=CACHE.get(k);if(h&&Date.now()-h.ts<ttl)return Promise.resolve(h.data);return fn().then(d=>{if(d&&(Array.isArray(d)?d.length>0:true))CACHE.set(k,{ts:Date.now(),data:d});return d;}).catch(e=>{if(h)return h.data;throw e;});}
 function parseCSV(t){const ls=t.trim().split('\n');if(ls.length<2)return[];const hs=ls[0].split(',').map(h=>h.replace(/"/g,'').trim());return ls.slice(1).map(l=>{const vs=[];let c='',q=false;for(const ch of l){if(ch==='"'){q=!q;continue;}if(ch===','&&!q){vs.push(c.trim());c='';continue;}c+=ch;}vs.push(c.trim());const o={};hs.forEach((h,i)=>o[h]=vs[i]??'');return o;});}
 
 // Finviz returns different columns per view. We fetch v=111 (overview) + v=171 (technical) + v=141 (performance) and merge by ticker

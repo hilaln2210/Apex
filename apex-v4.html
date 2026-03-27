@@ -1170,7 +1170,7 @@ async function refreshAll(){
 async function fetchFinviz(){
   const ps=['momentum','value','rsi','breakout'];
   const rs=await Promise.all(ps.map(p=>fetch(`${PROXY}/api/screener/${p}`).then(r=>r.json()).catch(()=>({ok:false}))));
-  ps.forEach((p,i)=>{if(rs[i].ok)allData[p]=rs[i].data||[];});
+  ps.forEach((p,i)=>{if(rs[i].ok&&rs[i].data?.length)allData[p]=rs[i].data;});
 }
 async function fetchExtBatch(){
   const syms=allStocks().map(s=>s.sym).slice(0,20);

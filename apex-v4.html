@@ -1215,7 +1215,8 @@ async function refreshAll(){
     setPills(); renderPicks(); renderScanner(); renderWatchlist();
     computeSignals(); renderSignals(); computeValueData(); renderValueTable();
     computeEarnings(); computeMeanReversion();
-  computeEarnings(); computeMeanReversion();
+    syncCorrLiveData(); renderCorrTriggers(); renderRegime(); renderConfluence();
+    if(corrTrigger) runCorrelationAnalysis(corrTrigger, corrDirection);
     buildAlerts(); updateTickerBar(); updateBadges();
   }catch(e){setSyncTxt('⚠️ שגיאה');}
   finally{btn.classList.remove('spinning');}
@@ -1885,8 +1886,39 @@ let corrTrigger = null;
 let corrDirection = null;
 let corrLag = 0;
 
+/* ── Sync triggers & prices with live data ─────────────────*/
+function syncCorrLiveData() {
+  // Update CORR_TRIGGERS from marketData (Finnhub live)
+  const mktMap = {};
+  marketData.forEach(m => { mktMap[m.name] = m; mktMap[m.sym] = m; });
+  const btcLive = mktMap['BTC'];
+  const vixLive = mktMap['VIX'];
+  const goldLive = mktMap['GOLD'];
+  const oilLive = mktMap['OIL'];
+  const spyLive = mktMap['S&P 500'];
+  if (btcLive)  { CORR_TRIGGERS.btc.val  = btcLive.px;  CORR_TRIGGERS.btc.ch  = btcLive.ch;  CORR_TRIGGERS.btc.up  = btcLive.ch >= 0; }
+  if (vixLive)  { CORR_TRIGGERS.vix.val  = vixLive.px;  CORR_TRIGGERS.vix.ch  = vixLive.ch;  CORR_TRIGGERS.vix.up  = vixLive.ch >= 0; }
+  if (goldLive) { CORR_TRIGGERS.gold.val = goldLive.px;  CORR_TRIGGERS.gold.ch = goldLive.ch; CORR_TRIGGERS.gold.up = goldLive.ch >= 0; }
+  if (oilLive)  { CORR_TRIGGERS.oil.val  = oilLive.px;  CORR_TRIGGERS.oil.ch  = oilLive.ch;  CORR_TRIGGERS.oil.up  = oilLive.ch >= 0; }
+  // DXY not in Finnhub free — estimate from SPY inverse
+  if (spyLive)  { CORR_TRIGGERS.dxy.ch = +(spyLive.ch * -0.35).toFixed(2); CORR_TRIGGERS.dxy.up = CORR_TRIGGERS.dxy.ch >= 0; }
+
+  // Update CORR_PRICES from allStocks() (Finviz live)
+  const stockMap = {};
+  allStocks().forEach(s => { stockMap[s.sym] = { px: s.px, ch: s.ch }; });
+  // Also add ETFs from marketData
+  marketData.forEach(m => { if (m.sym && m.px) stockMap[m.sym] = { px: m.px, ch: m.ch }; });
+  Object.keys(CORR_PRICES).forEach(sym => {
+    if (stockMap[sym]) {
+      CORR_PRICES[sym].px = stockMap[sym].px;
+      CORR_PRICES[sym].ch = stockMap[sym].ch;
+    }
+  });
+}
+
 /* ── Init ──────────────────────────────────────────────────*/
 function initCorrEngine() {
+  syncCorrLiveData();
   document.getElementById('corr-root').innerHTML = `
     <div id="corr-triggers" class="corr-trigger-bar"></div>
     <div id="corr-lag-bar" style="display:flex;gap:8px;margin-bottom:16px;align-items:center">

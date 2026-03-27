@@ -2343,29 +2343,20 @@ const CATALYST_TYPES = {
 };
 
 // Candidate stocks universe for replication scanning
-const CANDIDATE_UNIVERSE = [
-  // Biotech/Healthcare — FDA catalysts
-  {sym:'XTLB', name:'XTL Biopharmaceuticals', px:2.4,  ch:3.2,  vol:'2.8x', rsi:38, sector:'Healthcare', cap:'$180M', shortFloat:'24%', note:'Phase 3 upcoming', score:0},
-  {sym:'RNAZ', name:'TransCode Therapeutics',  px:1.8,  ch:1.4,  vol:'4.1x', rsi:31, sector:'Healthcare', cap:'$95M',  shortFloat:'18%', note:'RNA therapeutics', score:0},
-  {sym:'NVAX', name:'Novavax Inc',              px:8.4,  ch:2.8,  vol:'1.9x', rsi:35, sector:'Healthcare', cap:'$640M', shortFloat:'22%', note:'Vaccine pipeline', score:0},
-  {sym:'TGTX', name:'TG Therapeutics',          px:22.4, ch:4.1,  vol:'2.2x', rsi:42, sector:'Healthcare', cap:'$1.8B', shortFloat:'12%', note:'MS drug', score:0},
-  {sym:'PRAX', name:'Praxis Precision Med',     px:38.2, ch:5.8,  vol:'3.4x', rsi:39, sector:'Healthcare', cap:'$1.2B', shortFloat:'19%', note:'Neuro Phase 2/3', score:0},
-  // Small cap deal/contract
-  {sym:'GFAI', name:'Guardforce AI',            px:0.8,  ch:2.1,  vol:'5.2x', rsi:44, sector:'Technology', cap:'$28M',  shortFloat:'8%',  note:'Security AI deals', score:0},
-  {sym:'IMAQ', name:'International General',    px:11.4, ch:1.8,  vol:'3.1x', rsi:48, sector:'Finance',    cap:'$180M', shortFloat:'6%',  note:'SPAC deal pending', score:0},
-  {sym:'ACHR', name:'Archer Aviation',          px:12.1, ch:7.4,  vol:'3.9x', rsi:67, sector:'Industrial', cap:'$3.4B', shortFloat:'19%', note:'eVTOL contracts', score:0},
-  // Short squeeze candidates
-  {sym:'FFIE', name:'Faraday Future',           px:0.4,  ch:4.2,  vol:'8.4x', rsi:29, sector:'Automotive', cap:'$42M',  shortFloat:'42%', note:'High short float', score:0},
-  {sym:'MULN', name:'Mullen Automotive',        px:0.3,  ch:3.8,  vol:'7.2x', rsi:32, sector:'Automotive', cap:'$28M',  shortFloat:'38%', note:'High short, low float', score:0},
-  {sym:'NKLA', name:'Nikola Corporation',       px:1.2,  ch:2.4,  vol:'4.8x', rsi:36, sector:'Industrial', cap:'$480M', shortFloat:'28%', note:'Restructuring play', score:0},
-  // Meme/retail momentum
-  {sym:'HKIT', name:'Himax Technologies',       px:8.4,  ch:8.2,  vol:'6.8x', rsi:58, sector:'Technology', cap:'$840M', shortFloat:'4%',  note:'Display IC, retail interest', score:0},
-  {sym:'GCTK', name:'GlucoTrack Inc',           px:3.2,  ch:14.1, vol:'12.4x',rsi:62, sector:'Healthcare', cap:'$28M',  shortFloat:'22%', note:'CGM device', score:0},
-  {sym:'AIDX', name:'AI District',              px:4.8,  ch:9.4,  vol:'9.2x', rsi:55, sector:'Technology', cap:'$95M',  shortFloat:'16%', note:'AI retail play', score:0},
-  // Earnings plays
-  {sym:'SMCI', name:'Super Micro Computer',     px:42.8, ch:9.3,  vol:'5.2x', rsi:69, sector:'Technology', cap:'$24B',  shortFloat:'7%',  note:'AI server demand', score:0},
-  {sym:'IONQ', name:'IonQ Inc',                 px:38.6, ch:12.1, vol:'6.8x', rsi:74, sector:'Technology', cap:'$6B',   shortFloat:'22%', note:'Quantum earnings', score:0},
-];
+// ── Candidate universe = ALL live stocks from Finviz scanner ──
+// No hardcoded list — always uses the real data in allData
+function getCandidateUniverse(excludeSym) {
+  return allStocks()
+    .filter(s => s.sym !== excludeSym && s.ch > 0) // only stocks that are already moving up today
+    .map(s => ({
+      ...s,
+      // normalise fields the scorer expects
+      shortFloat: s.shortFloat || '—',
+      cap:        s.cap        || '—',
+      note:       s.note       || s.sector,
+      score:      0,
+    }));
+}
 
 function identifyCatalyst(s, news) {
   // Score each catalyst type based on news + stock characteristics
@@ -2404,8 +2395,7 @@ function scoreCandidates(sourceStock, catalystType) {
   const srcCapNum   = parseCapNum(sourceStock.cap);
   const filters     = catalystType.scanFilters;
 
-  return CANDIDATE_UNIVERSE
-    .filter(c => c.sym !== sourceStock.sym)
+  return getCandidateUniverse(sourceStock.sym)
     .map(c => {
       let score = 0;
       const cVolMult = parseFloat(c.vol) || 1;
@@ -2500,7 +2490,7 @@ async function openCRE(sym) {
   // Score candidates
   const candidates = scoreCandidates(s, catalystType);
   document.getElementById('cre-scan-status').textContent =
-    `נסרקו ${CANDIDATE_UNIVERSE.length} מניות · נמצאו ${candidates.length} מועמדים`;
+    `נסרקו ${getCandidateUniverse(s.sym).length} מניות מ-Finviz · נמצאו ${candidates.length} מועמדים`;
 
   document.getElementById('cre-candidates').innerHTML = candidates.map((c,i)=>{
     const matchColor = c.score>=70?'var(--green)':c.score>=45?'var(--yellow)':'var(--text2)';

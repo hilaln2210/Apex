@@ -438,6 +438,72 @@ header{position:sticky;top:0;z-index:50;height:56px;background:rgba(11,15,26,.96
 .cv-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
 .cv-interpretation{font-size:13px;line-height:1.8;color:var(--text);direction:rtl}
 .corr-empty{padding:40px;text-align:center;color:var(--text2);font-size:13px}
+
+/* ── CATALYST REPLICATION ENGINE ── */
+.cre-modal{position:fixed;inset:0;z-index:300;background:rgba(11,15,26,.95);
+  display:none;align-items:flex-start;justify-content:center;
+  backdrop-filter:blur(10px);padding:20px;overflow-y:auto}
+.cre-modal.show{display:flex}
+.cre-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;
+  width:900px;max-width:98vw;position:relative;animation:rise .35s ease}
+.cre-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:16px 16px 0 0;
+  background:linear-gradient(90deg,var(--pump),var(--yellow),var(--green))}
+.cre-head{padding:18px 22px;border-bottom:1px solid var(--border2);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.cre-title{font-family:var(--disp);font-size:11px;letter-spacing:3px;color:var(--yellow)}
+.cre-sym-big{font-family:var(--disp);font-size:28px;font-weight:900;color:var(--accent);letter-spacing:4px}
+.cre-ch-big{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--green)}
+.cre-body{padding:18px 22px}
+
+/* catalyst badge */
+.catalyst-badge{display:inline-flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:8px;margin-bottom:16px;
+  font-family:var(--disp);font-size:10px;letter-spacing:2px;border:1px solid}
+.cb-fda   {color:#ff6eb4;border-color:rgba(255,110,180,.4);background:rgba(255,110,180,.08)}
+.cb-deal  {color:var(--yellow);border-color:rgba(234,179,8,.4);background:var(--ydim)}
+.cb-squeeze{color:var(--squeeze);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
+.cb-earnings{color:var(--green);border-color:rgba(34,197,94,.4);background:var(--gdim)}
+.cb-meme  {color:var(--purple);border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.08)}
+.cb-unknown{color:var(--text2);border-color:var(--border2);background:var(--bg3)}
+
+/* DNA grid */
+.dna-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.dna-cell{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px}
+.dna-l{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text2);margin-bottom:3px;text-transform:uppercase}
+.dna-v{font-family:var(--mono);font-size:15px;font-weight:700}
+
+/* candidates */
+.cre-candidates{display:flex;flex-direction:column;gap:8px}
+.cre-cand{background:var(--panel);border:1px solid var(--border2);border-radius:10px;
+  padding:12px 16px;cursor:pointer;transition:all .2s;
+  display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:12px}
+.cre-cand:hover{border-color:var(--accent);transform:translateX(-2px)}
+.cre-cand.top-match{border-color:var(--green);background:rgba(34,197,94,.04)}
+.cc-rank{font-family:var(--disp);font-size:11px;font-weight:700;color:var(--text3);min-width:24px}
+.cc-sym{font-family:var(--disp);font-size:15px;font-weight:700;color:var(--accent);letter-spacing:1px}
+.cc-name{font-size:11px;color:var(--text2)}
+.cc-why{font-size:11px;color:var(--text);direction:rtl;line-height:1.4}
+.cc-match{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:1px}
+.cc-ch{font-family:var(--mono);font-size:13px;font-weight:700}
+.cc-signals{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.cc-sig{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:4px;
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text2)}
+.cc-sig.hot{color:var(--green);border-color:rgba(34,197,94,.35)}
+
+/* match bar */
+.match-bar-wrap{display:flex;align-items:center;gap:6px;min-width:90px}
+.match-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;flex:1}
+.match-bar-fill{height:100%;border-radius:2px;transition:width .8s ease}
+
+/* early signal indicators */
+.early-signals-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.es-pill{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;
+  font-family:var(--mono);font-size:10px;border:1px solid;cursor:default}
+.es-vol {color:var(--green);border-color:rgba(34,197,94,.35);background:var(--gdim)}
+.es-rsi {color:var(--accent);border-color:rgba(56,189,248,.35);background:var(--adim)}
+.es-opt {color:var(--purple);border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08)}
+.es-short{color:var(--squeeze);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
 </style>
 </head>
 <body>
@@ -750,6 +816,7 @@ header{position:sticky;top:0;z-index:50;height:56px;background:rgba(11,15,26,.96
       </div>
       <div class="dm-acts">
         <button class="dact" onclick="toggleWL()">⭐ מעקב</button>
+        <button class="dact" onclick="openCRE(currentSym)" style="border-color:var(--yellow);color:var(--yellow)">🔬 Catalyst Replication</button>
         <button class="dact p" onclick="deepAnalyze()">⚡ ניתוח מעמיק</button>
       </div>
     </div>
@@ -1888,7 +1955,6 @@ let corrLag = 0;
 
 /* ── Sync triggers & prices with live data ─────────────────*/
 function syncCorrLiveData() {
-  // Update CORR_TRIGGERS from marketData (Finnhub live)
   const mktMap = {};
   marketData.forEach(m => { mktMap[m.name] = m; mktMap[m.sym] = m; });
   const btcLive = mktMap['BTC'];
@@ -1900,19 +1966,12 @@ function syncCorrLiveData() {
   if (vixLive)  { CORR_TRIGGERS.vix.val  = vixLive.px;  CORR_TRIGGERS.vix.ch  = vixLive.ch;  CORR_TRIGGERS.vix.up  = vixLive.ch >= 0; }
   if (goldLive) { CORR_TRIGGERS.gold.val = goldLive.px;  CORR_TRIGGERS.gold.ch = goldLive.ch; CORR_TRIGGERS.gold.up = goldLive.ch >= 0; }
   if (oilLive)  { CORR_TRIGGERS.oil.val  = oilLive.px;  CORR_TRIGGERS.oil.ch  = oilLive.ch;  CORR_TRIGGERS.oil.up  = oilLive.ch >= 0; }
-  // DXY not in Finnhub free — estimate from SPY inverse
   if (spyLive)  { CORR_TRIGGERS.dxy.ch = +(spyLive.ch * -0.35).toFixed(2); CORR_TRIGGERS.dxy.up = CORR_TRIGGERS.dxy.ch >= 0; }
-
-  // Update CORR_PRICES from allStocks() (Finviz live)
   const stockMap = {};
   allStocks().forEach(s => { stockMap[s.sym] = { px: s.px, ch: s.ch }; });
-  // Also add ETFs from marketData
   marketData.forEach(m => { if (m.sym && m.px) stockMap[m.sym] = { px: m.px, ch: m.ch }; });
   Object.keys(CORR_PRICES).forEach(sym => {
-    if (stockMap[sym]) {
-      CORR_PRICES[sym].px = stockMap[sym].px;
-      CORR_PRICES[sym].ch = stockMap[sym].ch;
-    }
+    if (stockMap[sym]) { CORR_PRICES[sym].px = stockMap[sym].px; CORR_PRICES[sym].ch = stockMap[sym].ch; }
   });
 }
 
@@ -2239,6 +2298,277 @@ function refreshCorrPrices(key, dir) {
   runCorrelationAnalysis(key, dir);
 }
 
+
+/* ═══════════════════════════════════════
+   CATALYST REPLICATION ENGINE
+═══════════════════════════════════════ */
+
+// Catalog of catalyst types with their DNA fingerprint
+const CATALYST_TYPES = {
+  fda: {
+    id:'fda', label:'💊 FDA / Regulatory Approval', cls:'cb-fda',
+    keywords:['fda','approval','phase','trial','nda','bla','pdufa','ema','drug','clinical'],
+    dna:{ sector:'Healthcare/Biotech', capRange:'Micro/Small (<$2B)', shortFloat:'>15%', volumeMultiple:'>10x', rsiPre:'<40 (oversold before)' },
+    earlySignals:['Volume spike >5x', 'Options unusual activity', 'Short covering begins', 'RSI turning from oversold'],
+    scanFilters:{ sectors:['Healthcare','Biotech'], maxCap:2000, minShortFloat:10, minVolMult:2 }
+  },
+  deal: {
+    id:'deal', label:'🤝 Deal / Partnership / Contract', cls:'cb-deal',
+    keywords:['contract','deal','partnership','agreement','awarded','wins','selected','signed'],
+    dna:{ sector:'Any sector', capRange:'Small/Mid (<$10B)', shortFloat:'5-20%', volumeMultiple:'>5x', rsiPre:'30-60 (neutral before)' },
+    earlySignals:['Unusual volume pre-announcement', 'Insider buying signals', 'PR activity increase'],
+    scanFilters:{ sectors:[], maxCap:10000, minShortFloat:5, minVolMult:1.5 }
+  },
+  squeeze: {
+    id:'squeeze', label:'⚡ Short Squeeze', cls:'cb-squeeze',
+    keywords:['short','squeeze','covering','borrow','fee','float','utilization'],
+    dna:{ sector:'Any — especially Small Cap', capRange:'Micro (<$500M)', shortFloat:'>20%', volumeMultiple:'>15x', rsiPre:'<50' },
+    earlySignals:['Short float >20%', 'Borrow rate spiking', 'Small float', 'Volume starts quietly building'],
+    scanFilters:{ sectors:[], maxCap:500, minShortFloat:20, minVolMult:3 }
+  },
+  earnings: {
+    id:'earnings', label:'📊 Earnings Beat / Revenue Surprise', cls:'cb-earnings',
+    keywords:['earnings','revenue','beat','eps','quarter','guidance','raised','outlook'],
+    dna:{ sector:'Any — especially Tech/Consumer', capRange:'Small/Mid', shortFloat:'Any', volumeMultiple:'>5x', rsiPre:'45-65' },
+    earlySignals:['Earnings date approaching', 'Analyst upgrades', 'Whisper numbers rising'],
+    scanFilters:{ sectors:[], maxCap:50000, minShortFloat:0, minVolMult:2 }
+  },
+  meme: {
+    id:'meme', label:'🚀 Meme / Social Media Momentum', cls:'cb-meme',
+    keywords:['reddit','wsb','wallstreetbets','retail','trending','viral','squeeze'],
+    dna:{ sector:'Any — high retail interest', capRange:'Micro (<$1B)', shortFloat:'>15%', volumeMultiple:'>20x', rsiPre:'<60' },
+    earlySignals:['Social mention spike', 'Retail volume surge', 'Gamma squeeze potential', 'OTM calls buying'],
+    scanFilters:{ sectors:[], maxCap:1000, minShortFloat:15, minVolMult:5 }
+  },
+};
+
+// Candidate stocks universe for replication scanning
+const CANDIDATE_UNIVERSE = [
+  // Biotech/Healthcare — FDA catalysts
+  {sym:'XTLB', name:'XTL Biopharmaceuticals', px:2.4,  ch:3.2,  vol:'2.8x', rsi:38, sector:'Healthcare', cap:'$180M', shortFloat:'24%', note:'Phase 3 upcoming', score:0},
+  {sym:'RNAZ', name:'TransCode Therapeutics',  px:1.8,  ch:1.4,  vol:'4.1x', rsi:31, sector:'Healthcare', cap:'$95M',  shortFloat:'18%', note:'RNA therapeutics', score:0},
+  {sym:'NVAX', name:'Novavax Inc',              px:8.4,  ch:2.8,  vol:'1.9x', rsi:35, sector:'Healthcare', cap:'$640M', shortFloat:'22%', note:'Vaccine pipeline', score:0},
+  {sym:'TGTX', name:'TG Therapeutics',          px:22.4, ch:4.1,  vol:'2.2x', rsi:42, sector:'Healthcare', cap:'$1.8B', shortFloat:'12%', note:'MS drug', score:0},
+  {sym:'PRAX', name:'Praxis Precision Med',     px:38.2, ch:5.8,  vol:'3.4x', rsi:39, sector:'Healthcare', cap:'$1.2B', shortFloat:'19%', note:'Neuro Phase 2/3', score:0},
+  // Small cap deal/contract
+  {sym:'GFAI', name:'Guardforce AI',            px:0.8,  ch:2.1,  vol:'5.2x', rsi:44, sector:'Technology', cap:'$28M',  shortFloat:'8%',  note:'Security AI deals', score:0},
+  {sym:'IMAQ', name:'International General',    px:11.4, ch:1.8,  vol:'3.1x', rsi:48, sector:'Finance',    cap:'$180M', shortFloat:'6%',  note:'SPAC deal pending', score:0},
+  {sym:'ACHR', name:'Archer Aviation',          px:12.1, ch:7.4,  vol:'3.9x', rsi:67, sector:'Industrial', cap:'$3.4B', shortFloat:'19%', note:'eVTOL contracts', score:0},
+  // Short squeeze candidates
+  {sym:'FFIE', name:'Faraday Future',           px:0.4,  ch:4.2,  vol:'8.4x', rsi:29, sector:'Automotive', cap:'$42M',  shortFloat:'42%', note:'High short float', score:0},
+  {sym:'MULN', name:'Mullen Automotive',        px:0.3,  ch:3.8,  vol:'7.2x', rsi:32, sector:'Automotive', cap:'$28M',  shortFloat:'38%', note:'High short, low float', score:0},
+  {sym:'NKLA', name:'Nikola Corporation',       px:1.2,  ch:2.4,  vol:'4.8x', rsi:36, sector:'Industrial', cap:'$480M', shortFloat:'28%', note:'Restructuring play', score:0},
+  // Meme/retail momentum
+  {sym:'HKIT', name:'Himax Technologies',       px:8.4,  ch:8.2,  vol:'6.8x', rsi:58, sector:'Technology', cap:'$840M', shortFloat:'4%',  note:'Display IC, retail interest', score:0},
+  {sym:'GCTK', name:'GlucoTrack Inc',           px:3.2,  ch:14.1, vol:'12.4x',rsi:62, sector:'Healthcare', cap:'$28M',  shortFloat:'22%', note:'CGM device', score:0},
+  {sym:'AIDX', name:'AI District',              px:4.8,  ch:9.4,  vol:'9.2x', rsi:55, sector:'Technology', cap:'$95M',  shortFloat:'16%', note:'AI retail play', score:0},
+  // Earnings plays
+  {sym:'SMCI', name:'Super Micro Computer',     px:42.8, ch:9.3,  vol:'5.2x', rsi:69, sector:'Technology', cap:'$24B',  shortFloat:'7%',  note:'AI server demand', score:0},
+  {sym:'IONQ', name:'IonQ Inc',                 px:38.6, ch:12.1, vol:'6.8x', rsi:74, sector:'Technology', cap:'$6B',   shortFloat:'22%', note:'Quantum earnings', score:0},
+];
+
+function identifyCatalyst(s, news) {
+  // Score each catalyst type based on news + stock characteristics
+  const newsText = news.map(n=>(n.headline||'')+(n.summary||'')).join(' ').toLowerCase();
+  let best = null, bestScore = 0;
+  for (const [id, cat] of Object.entries(CATALYST_TYPES)) {
+    let score = 0;
+    cat.keywords.forEach(kw => { if (newsText.includes(kw)) score += 10; });
+    // Sector match
+    if (cat.scanFilters.sectors.length === 0) score += 2;
+    else if (cat.scanFilters.sectors.some(sec => (s.sector||'').toLowerCase().includes(sec.toLowerCase()))) score += 15;
+    // Volume bonus
+    const volMult = parseFloat(s.vol) || 1;
+    if (volMult >= cat.scanFilters.minVolMult * 2) score += 10;
+    else if (volMult >= cat.scanFilters.minVolMult) score += 5;
+    // Short float bonus
+    const sf = parseFloat((s.shortFloat||'').replace('%','')) || 0;
+    if (sf >= cat.scanFilters.minShortFloat) score += 8;
+    if (score > bestScore) { bestScore = score; best = cat; }
+  }
+  // If news found a clear keyword match, use it; otherwise detect from price action
+  if (bestScore < 10) {
+    // No clear news catalyst — detect from price action alone
+    const volMult = parseFloat(s.vol) || 1;
+    const sf = parseFloat((s.shortFloat||'').replace('%','')) || 0;
+    if (sf > 20 && volMult > 5) best = CATALYST_TYPES.squeeze;
+    else if (s.ch > 30)         best = CATALYST_TYPES.meme;
+    else                         best = CATALYST_TYPES.deal;
+  }
+  return { type: best, confidence: Math.min(bestScore + 30, 98) };
+}
+
+function scoreCandidates(sourceStock, catalystType) {
+  const srcVolMult  = parseFloat(sourceStock.vol) || 1;
+  const srcSF       = parseFloat((sourceStock.shortFloat||'').replace('%','')) || 0;
+  const srcCapNum   = parseCapNum(sourceStock.cap);
+  const filters     = catalystType.scanFilters;
+
+  return CANDIDATE_UNIVERSE
+    .filter(c => c.sym !== sourceStock.sym)
+    .map(c => {
+      let score = 0;
+      const cVolMult = parseFloat(c.vol) || 1;
+      const cSF      = parseFloat((c.shortFloat||'').replace('%','')) || 0;
+      const cCapNum  = parseCapNum(c.cap);
+
+      // Sector match
+      if (filters.sectors.length === 0 || filters.sectors.some(s=>c.sector.includes(s))) score += 20;
+      // Cap range match
+      if (cCapNum <= filters.maxCap) score += 15;
+      // Short float match
+      if (cSF >= filters.minShortFloat) score += 15;
+      // Volume building (early signal — not yet exploded)
+      if (cVolMult >= filters.minVolMult && cVolMult < srcVolMult * 0.5) score += 20; // building but not peaked
+      if (cVolMult < filters.minVolMult * 0.5) score -= 10; // too quiet
+      // RSI turning from oversold (early bounce signal)
+      if (c.rsi >= 28 && c.rsi <= 45) score += 15;
+      // Change not yet explosive (early stage)
+      if (c.ch >= 0.5 && c.ch <= 8) score += 10;  // starting to move
+      if (c.ch > 20) score -= 10;                  // already moved
+      if (c.ch < 0) score -= 5;
+
+      // Reason explanation
+      const reasons = [];
+      if (cSF >= 15) reasons.push(`Short ${cSF}%`);
+      if (cVolMult >= filters.minVolMult) reasons.push(`Vol ${c.vol}`);
+      if (c.rsi <= 40) reasons.push(`RSI ${c.rsi} (oversold)`);
+      if (filters.sectors.some(s=>c.sector.includes(s))) reasons.push(`Same sector`);
+      if (cCapNum <= 500) reasons.push(`Micro-cap`);
+      reasons.push(c.note);
+
+      return { ...c, score: Math.max(0, Math.min(score, 100)), matchReasons: reasons };
+    })
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 6);
+}
+
+function parseCapNum(capStr) {
+  if (!capStr || capStr === '—') return 9999999;
+  const s = capStr.toUpperCase();
+  const n = parseFloat(s);
+  if (s.includes('T')) return n * 1000000;
+  if (s.includes('B')) return n * 1000;
+  if (s.includes('M')) return n;
+  return n;
+}
+
+async function openCRE(sym) {
+  const s = allStocks().find(x=>x.sym===sym);
+  if (!s) return;
+
+  const modal = document.getElementById('cre-modal');
+  modal.classList.add('show');
+
+  // Header
+  const up = s.ch >= 0;
+  document.getElementById('cre-sym').textContent = sym;
+  document.getElementById('cre-ch').textContent  = `${up?'+':''}${s.ch}%`;
+  document.getElementById('cre-ch').style.color  = up ? 'var(--green)' : 'var(--red)';
+  document.getElementById('cre-meta').textContent = `${s.name} · ${s.sector} · ${s.cap}`;
+
+  // Show loading
+  document.getElementById('cre-catalyst-badge').innerHTML   = '<div class="ai-think"><span>מזהה catalyst...</span><div style="display:inline-flex;gap:3px"><div class="ai-d"></div><div class="ai-d"></div><div class="ai-d"></div></div></div>';
+  document.getElementById('cre-catalyst-explain').textContent = '';
+  document.getElementById('cre-candidates').innerHTML        = '<div class="empty">סורק...</div>';
+  document.getElementById('cre-ai-wrap').style.display       = 'none';
+
+  // Get news for this stock
+  const relNews = newsData.filter(n=>(n.related||'').includes(sym)||(n.headline||'').includes(sym));
+
+  // Identify catalyst (sync first for UI speed)
+  const { type: catalystType, confidence } = identifyCatalyst(s, relNews);
+
+  // Show catalyst badge
+  document.getElementById('cre-catalyst-badge').innerHTML = `
+    <div class="catalyst-badge ${catalystType.cls}" style="margin-bottom:10px">
+      ${catalystType.label}
+      <span style="font-family:var(--mono);font-size:9px;opacity:.7;margin-right:8px">confidence ${confidence}%</span>
+    </div>`;
+
+  // DNA grid
+  document.getElementById('cre-dna').innerHTML = Object.entries(catalystType.dna).map(([k,v])=>`
+    <div class="dna-cell">
+      <div class="dna-l">${k.replace(/([A-Z])/g,' $1').toUpperCase()}</div>
+      <div class="dna-v" style="font-size:12px;color:var(--accent)">${v}</div>
+    </div>`).join('');
+
+  // Early signals
+  document.getElementById('cre-early-signals').innerHTML = catalystType.earlySignals.map(sig=>`
+    <div class="es-pill es-vol">✓ ${sig}</div>`).join('');
+
+  // Score candidates
+  const candidates = scoreCandidates(s, catalystType);
+  document.getElementById('cre-scan-status').textContent =
+    `נסרקו ${CANDIDATE_UNIVERSE.length} מניות · נמצאו ${candidates.length} מועמדים`;
+
+  document.getElementById('cre-candidates').innerHTML = candidates.map((c,i)=>{
+    const matchColor = c.score>=70?'var(--green)':c.score>=45?'var(--yellow)':'var(--text2)';
+    const isTop = i===0;
+    const cUp = c.ch >= 0;
+    return `<div class="cre-cand ${isTop?'top-match':''}" onclick="openDetail('${c.sym}')">
+      <div class="cc-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`}</div>
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="cc-sym">${c.sym}</div>
+          <div class="cc-name">${c.name}</div>
+        </div>
+        <div class="cc-signals">
+          ${c.matchReasons.slice(0,4).map(r=>`<span class="cc-sig ${c.score>=70?'hot':''}">${r}</span>`).join('')}
+        </div>
+      </div>
+      <div style="direction:rtl">
+        <div class="cc-why" style="font-size:10px">${c.sector} · ${c.cap}</div>
+        <div style="font-size:10px;color:var(--text2)">RSI ${c.rsi}</div>
+      </div>
+      <div class="match-bar-wrap">
+        <div class="match-bar"><div class="match-bar-fill" style="width:${c.score}%;background:${matchColor}"></div></div>
+        <div class="cc-match" style="color:${matchColor}">${c.score}%</div>
+      </div>
+      <div class="cc-ch" style="color:${cUp?'var(--green)':'var(--red)'}">${cUp?'+':''}${c.ch}%</div>
+    </div>`;
+  }).join('');
+
+  // Run AI analysis
+  runCREAnalysis(s, catalystType, candidates, relNews);
+}
+
+async function runCREAnalysis(s, catalystType, candidates, news) {
+  const wrap = document.getElementById('cre-ai-wrap');
+  const el   = document.getElementById('cre-ai-txt');
+  wrap.style.display = 'block';
+  el.innerHTML = '<div class="ai-think"><span>AI מנתח את ה-Catalyst ומחפש מניות...</span><div style="display:inline-flex;gap:3px"><div class="ai-d"></div><div class="ai-d"></div><div class="ai-d"></div></div></div>';
+
+  const newsSnip = news.slice(0,3).map(n=>n.headline).join(' | ') || 'אין חדשות ספציפיות';
+  const topCands = candidates.slice(0,3).map(c=>`${c.sym}(${c.score}% match, Vol ${c.vol}, RSI ${c.rsi}, Short ${c.shortFloat})`).join(', ');
+
+  const prompt = `אתה מומחה למסחר intraday וזיהוי catalysts. המניה ${s.sym} (${s.name}) זינקה ${s.ch}% היום עם Volume פי ${s.vol}.
+
+חדשות: ${newsSnip}
+סיווג Catalyst שזיהינו: ${catalystType.label}
+DNA שחיפשנו: Sector=${catalystType.dna.sector}, Cap=${catalystType.dna.capRange}, ShortFloat=${catalystType.dna.shortFloat}
+מועמדות עולות שמצאנו: ${topCands}
+
+ענה בעברית, 5 משפטים:
+1. מהו ה-Catalyst האמיתי ב-${s.sym} ומה הוביל לזינוק (בהתבסס על החדשות)
+2. מה ה-DNA הספציפי שצריך לחפש במניות דומות
+3. למה ${candidates[0]?.sym} היא ה-Top Candidate — מה דומה לה ל-${s.sym} לפני הזינוק
+4. אותות מוקדמים שמסגירים שמניה עומדת לנוע (לפני שזה קורה)
+5. אזהרה: מה שונה ומה יכול לא לעבוד בסקנריו זה`;
+
+  try {
+    const r = await callClaude(prompt, 600);
+    el.innerHTML = r ? `<div style="white-space:pre-line">${r}</div>` : '';
+  } catch(_) {
+    el.textContent = `🔬 ${s.sym}: Catalyst מסוג "${catalystType.label}". Top candidate: ${candidates[0]?.sym} — DNA דומה עם ${candidates[0]?.matchReasons?.slice(0,2).join(', ')}.`;
+  }
+}
+
+function closeCRE(e) {
+  if (!e || e.target === document.getElementById('cre-modal'))
+    document.getElementById('cre-modal').classList.remove('show');
+}
+
 /* ═══ AUTOLOAD ═══ */
 window.addEventListener('load',()=>{
   const cfg=JSON.parse(localStorage.getItem('apex4-cfg')||'{}');
@@ -2256,5 +2586,68 @@ window.addEventListener('load',()=>{
   if(cfg.fv&&cfg.prx) setTimeout(connect,400);
 });
 </script>
+
+<!-- CATALYST REPLICATION ENGINE MODAL -->
+<div class="cre-modal" id="cre-modal" onclick="closeCRE(event)">
+  <div class="cre-box">
+    <div class="cre-head">
+      <div>
+        <div class="cre-title">🔬 CATALYST REPLICATION ENGINE</div>
+        <div style="display:flex;align-items:baseline;gap:14px;margin-top:6px">
+          <div class="cre-sym-big" id="cre-sym">—</div>
+          <div class="cre-ch-big" id="cre-ch">—</div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-top:3px" id="cre-meta">—</div>
+      </div>
+      <button class="cbtn" onclick="document.getElementById('cre-modal').classList.remove('show')" style="flex-shrink:0">✕</button>
+    </div>
+    <div class="cre-body">
+      <!-- Step 1: Catalyst identification -->
+      <div style="margin-bottom:16px">
+        <div style="font-family:var(--disp);font-size:9px;letter-spacing:2px;color:var(--text2);margin-bottom:8px">
+          שלב 1 — זיהוי ה-CATALYST
+        </div>
+        <div id="cre-catalyst-badge"></div>
+        <div id="cre-catalyst-explain" style="font-size:13px;line-height:1.8;color:var(--text);direction:rtl;
+          padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px"></div>
+      </div>
+      <!-- Step 2: Stock DNA -->
+      <div style="margin-bottom:16px">
+        <div style="font-family:var(--disp);font-size:9px;letter-spacing:2px;color:var(--text2);margin-bottom:8px">
+          שלב 2 — DNA של המניה (מה לחפש)
+        </div>
+        <div class="dna-grid" id="cre-dna"></div>
+      </div>
+      <!-- Early signals filter -->
+      <div style="margin-bottom:12px">
+        <div style="font-family:var(--disp);font-size:9px;letter-spacing:2px;color:var(--text2);margin-bottom:8px">
+          אותות מוקדמים לסינון
+        </div>
+        <div class="early-signals-row" id="cre-early-signals"></div>
+      </div>
+      <!-- Step 3: Candidates -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-family:var(--disp);font-size:9px;letter-spacing:2px;color:var(--yellow)">
+            שלב 3 — מניות שמתחילות לנוע עכשיו
+          </div>
+          <div id="cre-scan-status" style="font-family:var(--mono);font-size:10px;color:var(--text2)"></div>
+        </div>
+        <div class="cre-candidates" id="cre-candidates"></div>
+      </div>
+      <!-- AI deep explanation -->
+      <div id="cre-ai-wrap" style="margin-top:16px;display:none">
+        <div style="font-family:var(--disp);font-size:9px;letter-spacing:2px;color:var(--purple);
+          margin-bottom:8px;display:flex;align-items:center;gap:6px">
+          <div class="aipu"></div> AI CATALYST ANALYSIS
+        </div>
+        <div id="cre-ai-txt" style="font-size:13px;line-height:1.9;color:var(--text);direction:rtl;
+          padding:14px 16px;background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(56,189,248,.04));
+          border:1px solid rgba(167,139,250,.25);border-radius:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

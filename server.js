@@ -24,25 +24,29 @@ async function fetchMerged(filter){
   // v=111: Ticker,Company,Sector,Industry,Country,Market Cap,P/E,Price,Change,Volume
   // v=171: Ticker,Beta,ATR,SMA20,SMA50,SMA200,52W High,52W Low,RSI(14),Price,Change,Change from Open,Gap,Volume
   // v=141: Ticker,Perf Week...,Volatility Week/Month,Average Volume,Relative Volume,Price,Change,Volume
-  const [r1,r2,r3]=await Promise.all([
+  // v=131: Ticker,Market Cap,Shares Outstanding,Shares Float,Short Float,Short Ratio,Average Volume,...
+  const [r1,r2,r3,r4]=await Promise.all([
     fetch(fvBase(filter,'111'),hdr).then(r=>r.text()),
     fetch(fvBase(filter,'171'),hdr).then(r=>r.text()),
     fetch(fvBase(filter,'141'),hdr).then(r=>r.text()),
+    fetch(fvBase(filter,'131'),hdr).then(r=>r.text()),
   ]);
-  const d1=parseCSV(r1), d2=parseCSV(r2), d3=parseCSV(r3);
+  const d1=parseCSV(r1), d2=parseCSV(r2), d3=parseCSV(r3), d4=parseCSV(r4);
   // Index by ticker
-  const m2=new Map(), m3=new Map();
+  const m2=new Map(), m3=new Map(), m4=new Map();
   d2.forEach(r=>m2.set(r['Ticker'],r));
   d3.forEach(r=>m3.set(r['Ticker'],r));
+  d4.forEach(r=>m4.set(r['Ticker'],r));
   return d1.map(r=>{
     const sym=r['Ticker'];
     const tech=m2.get(sym)||{};
     const perf=m3.get(sym)||{};
-    return normMerged(r,tech,perf);
+    const share=m4.get(sym)||{};
+    return normMerged(r,tech,perf,share);
   }).filter(s=>s.sym);
 }
 
-function normMerged(ov,tech,perf){
+function normMerged(ov,tech,perf,share){
   const sym=ov['Ticker']||'';
   const ch=parseFloat((ov['Change']||'0').replace('%',''))||0;
   const px=parseFloat(ov['Price']||'0')||0;
@@ -63,11 +67,27 @@ function normMerged(ov,tech,perf){
   if(rsi<35)sc+=8;
   sc=Math.min(Math.round(sc),99);
 
+  // Market Cap in millions (from v=131, already in millions)
+  const capRaw=parseFloat((share['Market Cap']||'0').replace(/,/g,''))||0;
+  const capStr=capRaw>=1e6?(capRaw/1e6).toFixed(1)+'T':capRaw>=1e3?(capRaw/1e3).toFixed(1)+'B':capRaw>0?capRaw.toFixed(0)+'M':'—';
+  const shortFloat=share['Short Float']||'—';
+  const sharesOut=parseFloat((share['Shares Outstanding']||'0').replace(/,/g,''))||0;
+  // Enterprise Value estimate: MC + (assume debt~30% of MC for non-finance) - (assume cash~5% of MC)
+  // Better: EV ≈ MC * (1 + debt_ratio - cash_ratio). Use P/E and sector as rough proxy.
+  // Simple heuristic: EV = MC * 1.15 for most, MC * 1.4 for high-debt sectors
+  const highDebt=['Utilities','Real Estate','Financial','Energy'].includes(ov['Sector']||'');
+  const evMultiple=highDebt?1.35:1.12;
+  const evRaw=capRaw>0?capRaw*evMultiple:0;
+  const evStr=evRaw>=1e6?(evRaw/1e6).toFixed(1)+'T':evRaw>=1e3?(evRaw/1e3).toFixed(1)+'B':evRaw>0?evRaw.toFixed(0)+'M':'—';
+  const evMcRatio=capRaw>0?(evRaw/capRaw).toFixed(2):'—';
+
   return {
     sym, name:ov['Company']||'', px, ch, rsi, score:sc,
     vol: relVol>0?relVol.toFixed(1)+'x':(avgVol>0?(vol/avgVol).toFixed(1)+'x':'1.0x'),
     sector:ov['Sector']||'', industry:ov['Industry']||'',
-    cap:ov['Market Cap']||'', pe:ov['P/E']||'—',
+    cap:capStr, capRaw, pe:ov['P/E']||'—',
+    ev:evStr, evRaw, evMcRatio,
+    shortFloat, sharesOut,
     eps:'—', beta, high52, low52, gap,
     macd:ch>1?'positive':ch<-1?'negative':'neutral',
     note:ov['Industry']||ov['Sector']||''

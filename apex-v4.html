@@ -1458,7 +1458,8 @@ async function openDetail(sym,sigType){
 
   document.getElementById('dm-fv').innerHTML=[
     {l:'P/E',v:s.pe||'—'},{l:'P/B',v:s.pb||'—'},{l:'EPS',v:s.eps||'—'},{l:'Beta',v:s.beta||'—'},
-    {l:'Graham',v:vd?`$${vd.graham}`:'—'},{l:'Cash/Cap',v:s.cashCap||'—'},{l:'Div',v:s.div?s.div+'%':'—'},{l:'Cap',v:s.cap||'—'},
+    {l:'Market Cap',v:s.cap||'—'},{l:'EV',v:s.ev||'—'},{l:'EV/MC',v:s.evMcRatio||'—'},{l:'Short',v:s.shortFloat||'—'},
+    {l:'Graham',v:vd?`$${vd.graham}`:'—'},{l:'Cash/Cap',v:s.cashCap||'—'},{l:'Div',v:s.div?s.div+'%':'—'},{l:'52W H',v:s.high52||'—'},
   ].map(d=>`<div class="ds"><div class="ds-l">${d.l}</div><div class="ds-v">${d.v}</div></div>`).join('');
 
   drawChart(s);

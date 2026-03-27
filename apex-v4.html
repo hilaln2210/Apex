@@ -1307,7 +1307,7 @@ function renderPicks(){
       <div class="pick-sig">${em[i]||'🏅'}</div>
       <div class="pick-sym">${s.sym}</div>
       <div class="pick-sec">${s.sector}</div>
-      <div class="pick-ch">${s.ch>=0?'+':''}${s.ch}%</div>
+      <div style="display:flex;align-items:baseline;gap:6px"><div class="pick-ch">${s.ch>=0?'+':''}${s.ch}%</div><span style="font-family:var(--mono);font-size:12px;color:var(--text2)">$${s.px}</span></div>
       <div class="pick-tags">
         <span class="ptag" style="color:${cc[s.cat]||'var(--accent)'}">${s.cat.toUpperCase()}</span>
         <span class="ptag">VOL ${s.vol}</span><span class="ptag">RSI ${s.rsi}</span>

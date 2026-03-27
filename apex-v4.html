@@ -1287,11 +1287,12 @@ function renderAlertStrip(){
 
 /* ═══ PICKS ═══ */
 function renderPicks(){
+  const _seen=new Set();
   const all=[
     ...allData.breakout.map(s=>({...s,cat:'breakout'})),
     ...allData.momentum.map(s=>({...s,cat:'momentum'})),
     ...allData.value.filter(s=>s.score>80).map(s=>({...s,cat:'value'})),
-  ].sort((a,b)=>b.score-a.score);
+  ].sort((a,b)=>b.score-a.score).filter(s=>_seen.has(s.sym)?false:_seen.add(s.sym));
   const top=(pickF==='all'?all:all.filter(s=>s.cat===pickF)).slice(0,4);
   const em=['🥇','🥈','🥉','🏅'];
   const cc={breakout:'var(--yellow)',momentum:'var(--green)',value:'var(--value)'};
@@ -1574,7 +1575,7 @@ function setVerdict(){
 }
 
 /* ═══ UTILS ═══ */
-function allStocks(){return[...allData.momentum,...allData.value,...allData.rsi,...allData.breakout];}
+function allStocks(){const s=new Set(),r=[];[...allData.momentum,...allData.value,...allData.rsi,...allData.breakout].forEach(x=>{if(!s.has(x.sym)){s.add(x.sym);r.push(x);}});return r;}
 function updateBadges(){document.getElementById('tb-w').textContent=watchlist.length;}
 function goTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));

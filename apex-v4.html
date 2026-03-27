@@ -775,7 +775,14 @@ header{position:sticky;top:0;z-index:50;height:56px;background:rgba(11,15,26,.96
   <!-- WATCHLIST -->
   <div class="tc" id="c-wl">
     <div class="wl-sec">
-      <div class="wl-h"><span class="wl-t">⭐ WATCHLIST</span><button class="fpill" onclick="clearWL()">נקה</button></div>
+      <div class="wl-h">
+        <span class="wl-t">⭐ WATCHLIST</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="wl-add-input" class="api-input" placeholder="הקלד טיקר..." style="width:120px;padding:5px 8px;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px" onkeydown="if(event.key==='Enter')addToWL()">
+          <button class="fpill" onclick="addToWL()">+ הוסף</button>
+          <button class="fpill" onclick="clearWL()">נקה</button>
+        </div>
+      </div>
       <div id="wl-list"></div>
     </div>
   </div>
@@ -1527,15 +1534,30 @@ function renderHeatmap(){
 /* ═══ WATCHLIST ═══ */
 function renderWatchlist(){
   const el=document.getElementById('wl-list');
-  if(!watchlist.length){el.innerHTML='<div class="empty">לחץ על מניה → הוסף למעקב</div>';return;}
-  const stocks=watchlist.map(sym=>allStocks().find(s=>s.sym===sym)).filter(Boolean);
-  el.innerHTML=stocks.map((s,i)=>sRow(s,i)).join('');
+  if(!watchlist.length){el.innerHTML='<div class="empty">הקלד טיקר למעלה או לחץ על מניה → ⭐ מעקב</div>';return;}
+  const stocks=watchlist.map(sym=>{
+    const s=allStocks().find(x=>x.sym===sym);
+    if(s) return s;
+    return {sym,name:'',px:0,ch:0,vol:'—',rsi:0,score:0,sector:'',macd:'—'};
+  });
+  el.innerHTML=stocks.map((s,i)=>s.px?sRow(s,i):`<div class="srow" style="opacity:.6">
+    <div style="font-size:11px">⭐</div><div><div class="sr-sym">${s.sym}</div></div>
+    <div class="sr-info"><div class="sr-name">לא נמצא בסורק — טיקר ידני</div></div>
+    <div style="margin-right:auto"><button class="fpill" onclick="watchlist=watchlist.filter(x=>x!=='${s.sym}');localStorage.setItem('apex4-wl',JSON.stringify(watchlist));renderWatchlist();updateBadges();" style="font-size:9px">✕ הסר</button></div>
+  </div>`).join('');
 }
 function toggleWL(){
   if(!currentSym)return;
   watchlist=watchlist.includes(currentSym)?watchlist.filter(x=>x!==currentSym):[...watchlist,currentSym];
   localStorage.setItem('apex4-wl',JSON.stringify(watchlist));
   renderWatchlist(); updateBadges();
+}
+function addToWL(){
+  const inp=document.getElementById('wl-add-input');
+  const sym=(inp.value||'').trim().toUpperCase();
+  if(!sym)return;
+  if(!watchlist.includes(sym)){watchlist.push(sym);localStorage.setItem('apex4-wl',JSON.stringify(watchlist));renderWatchlist();updateBadges();}
+  inp.value='';
 }
 function clearWL(){watchlist=[];localStorage.setItem('apex4-wl','[]');renderWatchlist();updateBadges();}
 

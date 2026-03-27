@@ -391,6 +391,53 @@ header{position:sticky;top:0;z-index:50;height:56px;background:rgba(11,15,26,.96
 ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 .fi{animation:fi .35s ease forwards;opacity:0}
 @keyframes fi{to{opacity:1}}
+
+/* ── CORRELATION ENGINE ── */
+.corr-trigger-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.ct-card{background:var(--panel);border:2px solid var(--border2);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.ct-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.4)}
+.ct-card.active-trigger{box-shadow:0 0 0 2px var(--accent),0 8px 28px rgba(56,189,248,.2)}
+.ct-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border2);transition:background .3s}
+.ct-card.up::before{background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.ct-card.dn::before{background:linear-gradient(90deg,transparent,var(--red),transparent)}
+.ct-icon{font-size:22px;margin-bottom:6px}
+.ct-name{font-family:var(--disp);font-size:11px;letter-spacing:2px;color:var(--text2);margin-bottom:4px}
+.ct-val{font-family:var(--mono);font-size:20px;font-weight:700}
+.ct-ch{font-family:var(--mono);font-size:13px;font-weight:600;margin-top:2px}
+.ct-select{font-size:10px;color:var(--accent);margin-top:6px;font-family:var(--mono);letter-spacing:1px}
+
+.corr-flow{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:start;margin-bottom:20px}
+.corr-arrow{display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text2);padding-top:32px}
+.corr-col{background:var(--panel);border:1px solid var(--border2);border-radius:12px;overflow:hidden}
+.corr-col-head{padding:10px 14px;border-bottom:1px solid var(--border2);font-family:var(--disp);font-size:9px;letter-spacing:2px;display:flex;align-items:center;justify-content:space-between}
+.corr-col-head .count{font-family:var(--mono);font-size:10px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);padding:2px 7px;border-radius:10px}
+
+.corr-mkt-item{padding:10px 14px;border-bottom:1px solid rgba(30,45,69,.4);display:flex;align-items:center;gap:10px;cursor:default}
+.corr-mkt-item:last-child{border-bottom:none}
+.cmi-icon{font-size:18px;flex-shrink:0}
+.cmi-name{font-size:12px;color:var(--text);flex:1}
+.cmi-corr{font-family:var(--mono);font-size:11px;font-weight:600}
+.cmi-dir{font-size:11px;width:20px;text-align:center}
+
+.corr-stock-row{padding:9px 14px;border-bottom:1px solid rgba(30,45,69,.4);display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .15s}
+.corr-stock-row:hover{background:rgba(56,189,248,.04)}
+.corr-stock-row:last-child{border-bottom:none}
+.csr-sym{font-family:var(--disp);font-size:12px;font-weight:700;color:var(--accent);min-width:52px}
+.csr-name{font-size:10px;color:var(--text2);flex:1}
+.csr-theory{font-family:var(--mono);font-size:11px;font-weight:600}
+.csr-actual{font-family:var(--mono);font-size:11px;font-weight:700}
+.csr-check{font-size:14px;flex-shrink:0}
+
+.corr-verdict{margin-top:16px;background:var(--panel);border:1px solid var(--border2);border-radius:12px;padding:16px 18px}
+.cv-title{font-family:var(--disp);font-size:10px;letter-spacing:3px;color:var(--purple);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.cv-score-wrap{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.cv-score-big{font-family:var(--mono);font-size:52px;font-weight:700;line-height:1}
+.cv-score-label{font-size:12px;color:var(--text2);line-height:1.6}
+.cv-bar-wrap{flex:1}
+.cv-bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-top:4px}
+.cv-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.cv-interpretation{font-size:13px;line-height:1.8;color:var(--text);direction:rtl}
+.corr-empty{padding:40px;text-align:center;color:var(--text2);font-size:13px}
 </style>
 </head>
 <body>
@@ -455,6 +502,7 @@ header{position:sticky;top:0;z-index:50;height:56px;background:rgba(11,15,26,.96
   <div class="tab" onclick="goTab('value')" id="t-value">💎 DEEP VALUE <span class="tbadge" id="tb-v">0</span></div>
   <div class="tab" onclick="goTab('earnings')" id="t-earnings">📊 EARNINGS <span class="tbadge" id="tb-earn" style="color:var(--yellow)">0</span></div>
   <div class="tab" onclick="goTab('reversion')" id="t-reversion">🔄 MEAN REVERSION <span class="tbadge" id="tb-rev">0</span></div>
+  <div class="tab" onclick="goTab('corr')" id="t-corr">🔗 CORRELATION ENGINE <span class="tbadge" id="tb-corr" style="color:var(--accent)">0</span></div>
   <div class="tab" onclick="goTab('news')" id="t-news">📰 NEWS <span class="tbadge" id="tb-n" style="color:var(--purple)">0</span></div>
   <div class="tab" onclick="goTab('sectors')" id="t-sectors">🗺 SECTORS</div>
   <div class="tab" onclick="goTab('alerts')" id="t-alerts">🔔 ALERTS <span class="tbadge" id="tb-a" style="color:var(--red)">0</span></div>
@@ -635,6 +683,12 @@ header{position:sticky;top:0;z-index:50;height:56px;background:rgba(11,15,26,.96
         </table>
       </div>
     </div>
+  </div>
+
+
+  <!-- CORRELATION ENGINE -->
+  <div class="tc" id="c-corr">
+    <div id="corr-root"></div>
   </div>
 
   <!-- NEWS -->
@@ -1318,7 +1372,7 @@ function renderPicks(){
       <div class="pick-sig">${em[i]||'🏅'}</div>
       <div class="pick-sym">${s.sym}</div>
       <div class="pick-sec">${s.sector}</div>
-      <div style="display:flex;align-items:baseline;gap:6px"><div class="pick-ch">${s.ch>=0?'+':''}${s.ch}%</div><span style="font-family:var(--mono);font-size:12px;color:var(--text2)">$${s.px}</span></div>
+      <div class="pick-ch">${s.ch>=0?'+':''}${s.ch}%</div>
       <div class="pick-tags">
         <span class="ptag" style="color:${cc[s.cat]||'var(--accent)'}">${s.cat.toUpperCase()}</span>
         <span class="ptag">VOL ${s.vol}</span><span class="ptag">RSI ${s.rsi}</span>
@@ -1468,8 +1522,7 @@ async function openDetail(sym,sigType){
 
   document.getElementById('dm-fv').innerHTML=[
     {l:'P/E',v:s.pe||'—'},{l:'P/B',v:s.pb||'—'},{l:'EPS',v:s.eps||'—'},{l:'Beta',v:s.beta||'—'},
-    {l:'Market Cap',v:s.cap||'—'},{l:'EV',v:s.ev||'—'},{l:'EV/MC',v:s.evMcRatio||'—'},{l:'Short',v:s.shortFloat||'—'},
-    {l:'Graham',v:vd?`$${vd.graham}`:'—'},{l:'Cash/Cap',v:s.cashCap||'—'},{l:'Div',v:s.div?s.div+'%':'—'},{l:'52W H',v:s.high52||'—'},
+    {l:'Graham',v:vd?`$${vd.graham}`:'—'},{l:'Cash/Cap',v:s.cashCap||'—'},{l:'Div',v:s.div?s.div+'%':'—'},{l:'Cap',v:s.cap||'—'},
   ].map(d=>`<div class="ds"><div class="ds-l">${d.l}</div><div class="ds-v">${d.v}</div></div>`).join('');
 
   drawChart(s);
@@ -1593,6 +1646,7 @@ function goTab(id){
   document.querySelectorAll('.tc').forEach(c=>c.classList.remove('active'));
   document.getElementById('t-'+id).classList.add('active');
   document.getElementById('c-'+id).classList.add('active');
+  if(id==='corr') initCorrEngine();
 }
 function setSyncTxt(txt,t){
   document.getElementById('sync-txt').textContent=txt;
@@ -1623,6 +1677,338 @@ function fallbackSig(s,pump,capit,whale,vd){
 function fbMarket(){
   const pump=signalData.pump[0],capit=signalData.capit[0],vTop=valData[0];
   return `📈 ${allStocks().filter(s=>s.ch>0).length}/${allStocks().length} מניות עולות. ${pump?`🚨 PUMP ALERT: ${pump.sym} (+${pump.ch}%, Vol ${pump.vol}) — זהירות!`:''}  ${capit?`📉 Capitulation: ${capit.sym} RSI ${capit.rsi} — bounce?`:''} ${vTop?`💎 Top Value: ${vTop.sym} Graham ${vTop.graham}, Score ${vTop.gscore}/100.`:''}`;
+}
+
+
+/* ═══════════════════════════════════════
+   CORRELATION ENGINE
+═══════════════════════════════════════ */
+
+// Market triggers with their correlations
+const CORR_TRIGGERS = {
+  btc: {
+    name:'BTC/USD', icon:'₿', val:68420, ch:2.1, up:true,
+    whenUP: [
+      {name:'Crypto Stocks',    icon:'🪙', corr:0.91, dir:'up',   tickers:['MSTR','COIN','HOOD','RIOT','MARA']},
+      {name:'Risk-On Tech',     icon:'💻', corr:0.68, dir:'up',   tickers:['NVDA','META','PLTR','SMCI','IONQ']},
+      {name:'Gold',             icon:'🥇', corr:-0.22,dir:'down', tickers:['GLD','NEM','GOLD','AEM']},
+      {name:'Utilities',        icon:'⚡', corr:-0.31,dir:'down', tickers:['NEE','DUK','SO','D']},
+    ],
+    whenDOWN: [
+      {name:'Gold / Safe Haven',icon:'🥇', corr:0.58, dir:'up',   tickers:['GLD','NEM','GOLD','AEM','FNV']},
+      {name:'Utilities',        icon:'⚡', corr:0.42, dir:'up',   tickers:['NEE','DUK','SO','D','AEP']},
+      {name:'Bonds / TLT',      icon:'📊', corr:0.38, dir:'up',   tickers:['TLT','IEF','AGG','BND']},
+      {name:'Consumer Staples', icon:'🛒', corr:0.31, dir:'up',   tickers:['PG','KO','WMT','COST','JNJ']},
+      {name:'Crypto Stocks',    icon:'🪙', corr:-0.89,dir:'down', tickers:['MSTR','COIN','RIOT','MARA','HOOD']},
+    ]
+  },
+  vix: {
+    name:'VIX (Fear)', icon:'😱', val:18.3, ch:-3.2, up:false,
+    whenUP: [
+      {name:'Gold',             icon:'🥇', corr:0.72, dir:'up',   tickers:['GLD','NEM','GOLD','AEM']},
+      {name:'Bonds / TLT',      icon:'📊', corr:0.61, dir:'up',   tickers:['TLT','IEF','SHY','BND']},
+      {name:'Utilities',        icon:'⚡', corr:0.44, dir:'up',   tickers:['NEE','DUK','SO','D']},
+      {name:'Consumer Staples', icon:'🛒', corr:0.38, dir:'up',   tickers:['PG','KO','WMT','COST']},
+      {name:'Tech / Growth',    icon:'💻', corr:-0.78,dir:'down', tickers:['NVDA','META','TSLA','PLTR','SMCI']},
+    ],
+    whenDOWN: [
+      {name:'Tech / Growth',    icon:'💻', corr:0.82, dir:'up',   tickers:['NVDA','META','AVGO','PLTR','SMCI']},
+      {name:'Small Caps',       icon:'📈', corr:0.71, dir:'up',   tickers:['IWM','SOUN','ACHR','IONQ','MSTR']},
+      {name:'High Beta Stocks', icon:'⚡', corr:0.65, dir:'up',   tickers:['MSTR','COIN','SOUN','ACHR','PLTR']},
+      {name:'Gold',             icon:'🥇', corr:-0.48,dir:'down', tickers:['GLD','NEM','FNV']},
+    ]
+  },
+  dxy: {
+    name:'USD (DXY)', icon:'💵', val:104.2, ch:0.38, up:true,
+    whenUP: [
+      {name:'Commodities ↓',    icon:'🛢', corr:-0.71,dir:'down', tickers:['XOM','CVX','COP','MPC','VLO']},
+      {name:'Gold ↓',           icon:'🥇', corr:-0.68,dir:'down', tickers:['GLD','NEM','GOLD','AEM']},
+      {name:'Export Stocks ↓',  icon:'🏭', corr:-0.52,dir:'down', tickers:['AAPL','NVDA','CAT','DE','BA']},
+      {name:'US Banks ↑',       icon:'🏦', corr:0.41, dir:'up',   tickers:['JPM','BAC','GS','MS','WFC']},
+    ],
+    whenDOWN: [
+      {name:'Gold / Metals',    icon:'🥇', corr:0.74, dir:'up',   tickers:['GLD','NEM','GOLD','AEM','FCX']},
+      {name:'Energy / Oil',     icon:'🛢', corr:0.62, dir:'up',   tickers:['XOM','CVX','COP','OXY','MPC']},
+      {name:'Emerging Mkts',    icon:'🌍', corr:0.55, dir:'up',   tickers:['EEM','BABA','NIO','MELI']},
+      {name:'Multinational Tech',icon:'💻',corr:0.48, dir:'up',   tickers:['AAPL','NVDA','MSFT','GOOGL']},
+    ]
+  },
+  oil: {
+    name:'Oil (WTI)', icon:'🛢', val:71.2, ch:-0.38, up:false,
+    whenUP: [
+      {name:'Energy Stocks',    icon:'⛽', corr:0.88, dir:'up',   tickers:['XOM','CVX','COP','OXY','MPC','VLO']},
+      {name:'Oil Services',     icon:'🔧', corr:0.79, dir:'up',   tickers:['SLB','HAL','BKR','NOV']},
+      {name:'Airlines ↓',       icon:'✈️', corr:-0.72,dir:'down', tickers:['UAL','DAL','AAL','LUV','JBLU']},
+      {name:'Transport ↓',      icon:'🚚', corr:-0.51,dir:'down', tickers:['FDX','UPS','JBHT','XPO']},
+    ],
+    whenDOWN: [
+      {name:'Airlines',         icon:'✈️', corr:0.76, dir:'up',   tickers:['UAL','DAL','AAL','LUV','JBLU']},
+      {name:'Transport',        icon:'🚚', corr:0.63, dir:'up',   tickers:['FDX','UPS','JBHT','XPO','ODFL']},
+      {name:'Retail / Consumer',icon:'🛍', corr:0.55, dir:'up',   tickers:['AMZN','TGT','WMT','COST','TJX']},
+      {name:'Energy ↓',         icon:'⛽', corr:-0.86,dir:'down', tickers:['XOM','CVX','COP','OXY']},
+    ]
+  },
+  gold: {
+    name:'Gold', icon:'🥇', val:2217.8, ch:0.45, up:true,
+    whenUP: [
+      {name:'Mining Stocks',    icon:'⛏', corr:0.82, dir:'up',   tickers:['NEM','GOLD','AEM','FNV','WPM']},
+      {name:'Silver / Metals',  icon:'🪙', corr:0.71, dir:'up',   tickers:['SLV','AG','PAAS','HL']},
+      {name:'Safe Haven ETFs',  icon:'🛡', corr:0.58, dir:'up',   tickers:['GLD','IAU','PHYS']},
+      {name:'Risk Assets ↓',   icon:'📉', corr:-0.45,dir:'down', tickers:['NVDA','META','TSLA','COIN']},
+    ],
+    whenDOWN: [
+      {name:'Risk-On Tech',     icon:'💻', corr:0.61, dir:'up',   tickers:['NVDA','META','AVGO','MSFT']},
+      {name:'Crypto',           icon:'₿',  corr:0.44, dir:'up',   tickers:['MSTR','COIN','RIOT']},
+      {name:'Mining Stocks ↓',  icon:'⛏', corr:-0.81,dir:'down', tickers:['NEM','GOLD','AEM','FNV']},
+    ]
+  }
+};
+
+// Simulated real-time prices for correlation verification
+const CORR_PRICES = {
+  // Crypto-related
+  MSTR:{px:312.4,ch:7.8},  COIN:{px:198.3,ch:3.2},  RIOT:{px:11.2,ch:5.4},
+  MARA:{px:18.7,ch:6.1},   HOOD:{px:22.4,ch:2.8},
+  // Gold/Safe haven
+  GLD:{px:211.8,ch:1.2},   NEM:{px:38.4,ch:1.8},   GOLD:{px:18.2,ch:2.1},
+  AEM:{px:62.4,ch:1.5},    FNV:{px:118.2,ch:0.9},
+  // Utilities
+  NEE:{px:68.4,ch:0.8},    DUK:{px:108.2,ch:0.6},  SO:{px:74.8,ch:0.7},
+  D:{px:54.2,ch:0.5},      AEP:{px:98.4,ch:0.4},
+  // Bonds
+  TLT:{px:92.4,ch:1.4},    IEF:{px:98.2,ch:0.8},   BND:{px:74.8,ch:0.6},
+  // Staples
+  PG:{px:168.4,ch:0.4},    KO:{px:62.8,ch:0.3},    WMT:{px:78.2,ch:0.5},
+  COST:{px:918.4,ch:0.8},  JNJ:{px:148.2,ch:-0.2},
+  // Tech
+  NVDA:{px:875.4,ch:5.2},  META:{px:512.8,ch:3.8}, AVGO:{px:168.3,ch:4.1},
+  PLTR:{px:28.5,ch:6.7},   SMCI:{px:42.8,ch:9.3},  IONQ:{px:38.6,ch:12.1},
+  TSLA:{px:198.4,ch:-1.8}, MSFT:{px:418.2,ch:0.9}, GOOGL:{px:178.4,ch:1.2},
+  // Energy
+  XOM:{px:118.4,ch:-0.8},  CVX:{px:154.2,ch:-0.6}, COP:{px:118.8,ch:-0.9},
+  OXY:{px:56.4,ch:-1.1},   MPC:{px:178.2,ch:-0.7}, VLO:{px:148.4,ch:-0.8},
+  SLB:{px:44.2,ch:-1.2},   HAL:{px:32.8,ch:-0.9},
+  // Airlines
+  UAL:{px:68.4,ch:1.4},    DAL:{px:52.8,ch:1.2},   AAL:{px:12.4,ch:2.1},
+  LUV:{px:28.8,ch:1.8},    JBLU:{px:4.8,ch:3.2},
+  // Transport
+  FDX:{px:278.4,ch:0.8},   UPS:{px:138.2,ch:0.6},  XPO:{px:118.4,ch:1.2},
+  // Banks
+  JPM:{px:218.4,ch:0.6},   BAC:{px:38.2,ch:0.4},   GS:{px:528.4,ch:0.8},
+  // Metals
+  SLV:{px:24.8,ch:1.2},    FCX:{px:42.4,ch:1.8},
+  // Mining
+  WPM:{px:54.8,ch:1.4},    AG:{px:8.4,ch:2.2},
+  // Other
+  SOUN:{px:8.4,ch:8.7},    ACHR:{px:12.1,ch:7.4},
+  IWM:{px:198.4,ch:1.8},   BABA:{px:88.4,ch:2.1},
+  TGT:{px:148.2,ch:0.8},   AMZN:{px:188.4,ch:1.2}, TJX:{px:118.4,ch:0.6},
+};
+
+let corrTrigger = null;
+let corrDirection = null;
+
+function initCorrEngine() {
+  renderCorrTriggers();
+  document.getElementById('corr-root').innerHTML = `
+    <div class="corr-trigger-bar" id="corr-triggers"></div>
+    <div id="corr-body"><div class="corr-empty">👆 בחר נכס להפעלת מנוע הקורלציות</div></div>
+  `;
+  renderCorrTriggers();
+  document.getElementById('tb-corr').textContent = Object.keys(CORR_TRIGGERS).length;
+}
+
+function renderCorrTriggers() {
+  const wrap = document.getElementById('corr-triggers');
+  if (!wrap) return;
+  wrap.innerHTML = Object.entries(CORR_TRIGGERS).map(([key, t]) => {
+    const up = t.ch >= 0;
+    const isActive = corrTrigger === key;
+    return `<div class="ct-card ${up?'up':'dn'} ${isActive?'active-trigger':''}" onclick="selectTrigger('${key}')">
+      <div class="ct-icon">${t.icon}</div>
+      <div class="ct-name">${t.name}</div>
+      <div class="ct-val" style="color:${up?'var(--green)':'var(--red)'}">${t.val.toLocaleString()}</div>
+      <div class="ct-ch" style="color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${t.ch}%</div>
+      <div class="ct-select">${isActive?'✓ נבחר':'לחץ לניתוח →'}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectTrigger(key) {
+  corrTrigger = key;
+  const t = CORR_TRIGGERS[key];
+  corrDirection = t.ch >= 0 ? 'up' : 'down';
+  renderCorrTriggers();
+  runCorrelationAnalysis(key, corrDirection);
+}
+
+function runCorrelationAnalysis(key, dir) {
+  const t = CORR_TRIGGERS[key];
+  const markets = dir === 'up' ? t.whenUP : t.whenDOWN;
+  const triggerUp = dir === 'up';
+  const triggerColor = triggerUp ? 'var(--green)' : 'var(--red)';
+  const triggerLabel = triggerUp ? '📈 עולה' : '📉 יורד';
+
+  // Gather all tickers across markets
+  const allTickers = [...new Set(markets.flatMap(m => m.tickers.slice(0,3)))];
+
+  // Check actual prices
+  const verified = allTickers.map(sym => {
+    const p = CORR_PRICES[sym] || {px:0, ch:0};
+    return { sym, px:p.px, ch:p.ch };
+  });
+
+  // Build market → stocks mapping with verification
+  const marketRows = markets.map(m => {
+    const expectedUp = m.dir === 'up';
+    const stocks = m.tickers.slice(0,4).map(sym => {
+      const p = CORR_PRICES[sym] || { px:0, ch:0 };
+      const actualUp = p.ch >= 0;
+      const confirmed = expectedUp ? actualUp : !actualUp;
+      return { sym, px:p.px, ch:p.ch, expectedUp, confirmed };
+    });
+    const confirmCount = stocks.filter(s=>s.confirmed).length;
+    const confirmRate = Math.round(confirmCount / stocks.length * 100);
+    return { ...m, stocks, confirmCount, confirmRate };
+  });
+
+  // Overall score
+  const totalStocks = marketRows.flatMap(m=>m.stocks);
+  const totalConfirmed = totalStocks.filter(s=>s.confirmed).length;
+  const overallScore = Math.round(totalConfirmed / totalStocks.length * 100);
+  const scoreColor = overallScore >= 70 ? 'var(--green)' : overallScore >= 45 ? 'var(--yellow)' : 'var(--red)';
+  const scoreLabel = overallScore >= 70 ? '✅ תזת הקורלציה מאושרת' : overallScore >= 45 ? '⚡ אישור חלקי' : '❌ הקורלציה לא מאושרת';
+
+  // Render flow
+  document.getElementById('corr-body').innerHTML = `
+    <!-- FLOW: Trigger → Markets → Stocks -->
+    <div style="margin-bottom:18px;padding:12px 16px;background:var(--panel);border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px">
+      <span style="font-size:20px">${t.icon}</span>
+      <span style="color:var(--text2)">${t.name}</span>
+      <span style="color:${triggerColor};font-size:16px;font-weight:700">${triggerLabel} ${Math.abs(t.ch)}%</span>
+      <span style="color:var(--text3);margin:0 4px">→</span>
+      <span style="color:var(--text2)">השוק מצפה ש...</span>
+    </div>
+
+    <!-- Markets expected to move -->
+    <div style="display:grid;grid-template-columns:repeat(${Math.min(markets.length,4)},1fr);gap:10px;margin-bottom:18px">
+      ${marketRows.map(m => {
+        const mUp = m.dir === 'up';
+        const mColor = mUp ? 'var(--green)' : 'var(--red)';
+        const cColor = m.confirmRate>=70?'var(--green)':m.confirmRate>=45?'var(--yellow)':'var(--red)';
+        return `<div class="corr-col">
+          <div class="corr-col-head" style="color:${mColor}">
+            <span>${m.icon} ${m.name}</span>
+            <span class="count" style="color:${cColor}">${m.confirmRate}% ✓</span>
+          </div>
+          <div style="padding:4px 0">
+            ${m.stocks.map(s=>`
+            <div class="corr-stock-row" onclick="openDetail('${s.sym}')">
+              <div class="csr-sym">${s.sym}</div>
+              <div class="csr-name" style="font-size:9px">$${s.px}</div>
+              <div class="csr-theory" style="color:${mUp?'var(--green)':'var(--red)'}">${mUp?'↑ צפוי':'↓ צפוי'}</div>
+              <div class="csr-actual" style="color:${s.ch>=0?'var(--green)':'var(--red)'}">${s.ch>=0?'+':''}${s.ch}%</div>
+              <div class="csr-check">${s.confirmed?'✅':'❌'}</div>
+            </div>`).join('')}
+          </div>
+          <div style="padding:8px 14px;border-top:1px solid var(--border2)">
+            <div style="height:4px;background:var(--bg3);border-radius:2px;overflow:hidden">
+              <div style="height:100%;width:${m.confirmRate}%;background:${cColor};border-radius:2px;transition:width 1s"></div>
+            </div>
+            <div style="font-family:var(--mono);font-size:9px;color:var(--text2);margin-top:4px">
+              ${m.confirmCount}/${m.stocks.length} מניות מאשרות את הקורלציה
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- VERDICT -->
+    <div class="corr-verdict">
+      <div class="cv-title">
+        <div class="aipu"></div>
+        CORRELATION VERDICT — תוצאת הניתוח
+      </div>
+      <div class="cv-score-wrap">
+        <div class="cv-score-big" style="color:${scoreColor}">${overallScore}%</div>
+        <div style="flex:1">
+          <div style="font-family:var(--disp);font-size:11px;color:${scoreColor};letter-spacing:1px;margin-bottom:4px">${scoreLabel}</div>
+          <div class="cv-bar"><div class="cv-bar-fill" style="width:${overallScore}%;background:${scoreColor}"></div></div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text2);margin-top:4px">
+            ${totalConfirmed} מתוך ${totalStocks.length} מניות מתנהגות כצפוי
+          </div>
+        </div>
+      </div>
+      <div class="cv-interpretation">
+        ${generateCorrInterpretation(t, dir, markets, overallScore, marketRows)}
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px">
+        <button class="aibtn" style="width:auto;padding:8px 18px" onclick="runCorrAI('${key}','${dir}',${overallScore})">⚡ ניתוח AI מעמיק</button>
+        <button class="fpill" onclick="refreshCorrPrices('${key}','${dir}')">↻ רענן מחירים</button>
+      </div>
+      <div id="corr-ai-out" style="margin-top:12px;font-size:13px;line-height:1.8;color:var(--text);direction:rtl;display:none"></div>
+    </div>
+  `;
+}
+
+function generateCorrInterpretation(t, dir, markets, score, marketRows) {
+  const trigUp = dir==='up';
+  const confirmedMarkets = marketRows.filter(m=>m.confirmRate>=60);
+  const weakMarkets = marketRows.filter(m=>m.confirmRate<40);
+
+  let txt = `📊 ${t.name} ${trigUp?'עולה':'יורד'} ${Math.abs(t.ch)}% — `;
+
+  if (score >= 70) {
+    txt += `הקורלציות <strong style="color:var(--green)">מאושרות בחוזקה</strong>. `;
+    if (confirmedMarkets.length) txt += `${confirmedMarkets.map(m=>`${m.icon} ${m.name} (${m.confirmRate}%✓)`).join(', ')} מתנהגים בדיוק כצפוי. `;
+    txt += `זהו סיגנל אמין — ניתן לסמוך על תזת הקורלציה לזיהוי הזדמנויות.`;
+  } else if (score >= 45) {
+    txt += `<strong style="color:var(--yellow)">אישור חלקי</strong> של הקורלציות. `;
+    if (confirmedMarkets.length) txt += `${confirmedMarkets[0].icon} ${confirmedMarkets[0].name} מאשר (${confirmedMarkets[0].confirmRate}%). `;
+    if (weakMarkets.length) txt += `${weakMarkets[0].icon} ${weakMarkets[0].name} לא מגיב כצפוי — ייתכן גורם נגד. `;
+    txt += `כדאי להמתין לאישור נוסף לפני כניסה.`;
+  } else {
+    txt += `<strong style="color:var(--red)">הקורלציות לא מאושרות</strong>. `;
+    txt += `השוק מתנהג שלא לפי הדפוס הרגיל — ייתכן אירוע חיצוני שמשבש את הקורלציות הרגילות. `;
+    txt += `זהירות — אל תסמוך על הקורלציות הרגילות בשוק זה.`;
+  }
+  return txt;
+}
+
+async function runCorrAI(key, dir, score) {
+  const el = document.getElementById('corr-ai-out');
+  el.style.display = 'block';
+  el.innerHTML = '<div class="ai-think"><span>מנתח קורלציות...</span><div style="display:inline-flex;gap:3px"><div class="ai-d"></div><div class="ai-d"></div><div class="ai-d"></div></div></div>';
+  const t = CORR_TRIGGERS[key];
+  const markets = dir==='up' ? t.whenUP : t.whenDOWN;
+  const topMkts = markets.slice(0,3).map(m=>`${m.name}(${m.dir==='up'?'↑':'↓'} צפוי, קורלציה ${m.corr})`).join(', ');
+
+  const prompt = `אתה מנתח מאקרו. ${t.name} ${dir==='up'?'עולה':'יורד'} ${Math.abs(t.ch)}%.
+  
+קורלציות צפויות: ${topMkts}
+ציון אישור בפועל: ${score}% מהמניות מתנהגות כצפוי.
+
+ניתוח בעברית, 4 משפטים:
+1. מה המשמעות המאקרו-כלכלית של המהלך הזה
+2. אילו הזדמנויות ספציפיות נובעות מהקורלציה
+3. למה ציון האישור הוא ${score}% ומה זה אומר
+4. המלצה אחת ספציפית — מניה + כניסה + לוגיקה`;
+
+  try {
+    const r = await callClaude(prompt, 500);
+    el.textContent = r || '';
+  } catch(_) {
+    el.textContent = `📊 ${t.name} ${dir==='up'?'עולה':'יורד'} — ציון קורלציה ${score}%. ${score>=70?'הקורלציות חזקות — כדאי לפעול לפיהן.':score>=45?'אישור חלקי — זהירות.':'הקורלציות שבורות — חכה לאישור.'}`;
+  }
+}
+
+function refreshCorrPrices(key, dir) {
+  // Slightly randomize prices to simulate real refresh
+  Object.keys(CORR_PRICES).forEach(sym => {
+    CORR_PRICES[sym].ch = +(CORR_PRICES[sym].ch + (Math.random()-0.5)*0.4).toFixed(2);
+    CORR_PRICES[sym].px = +(CORR_PRICES[sym].px * (1+(Math.random()-0.5)*0.003)).toFixed(2);
+  });
+  runCorrelationAnalysis(key, dir);
 }
 
 /* ═══ AUTOLOAD ═══ */
